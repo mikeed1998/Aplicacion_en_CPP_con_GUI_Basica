@@ -6,44 +6,48 @@
 using namespace Gtk;
 using namespace std;
 
-Window* pVentana = nullptr;
-Label* p_lbl_titulo = nullptr;
+// Definimos punteros para cada uno de los Widgets de la ventana.
+Window* pVentana = nullptr;		// Ventana principal
+Label* p_lbl_titulo = nullptr;		
 Label* p_lbl_descripcion = nullptr;
 Label* p_lbl_nombre = nullptr;
-Entry* p_txt_nombre = nullptr;
+Entry* p_txt_nombre = nullptr;		// Almacena un nombre tipo STRING
 Label* p_lbl_edad = nullptr;
-Entry* p_txt_edad = nullptr;
+Entry* p_txt_edad = nullptr;		// Almacena la edad tipo INT
 Label* p_lbl_resultado = nullptr;
 Button* p_btn_salir = nullptr;
-Button* p_btn_resultado = nullptr;
+Button* p_btn_resultado = nullptr;	// Almacena un resultado tipo STRING
 
+// Creamos un objeto de tipo user
 Usuario user;
 
-static void on_btn_resultado_clicked()
+static void on_btn_resultado_clicked()	// Definimos la función que se ejecutará cuando hagamos clic en btn_resultado
 {
-	if((p_txt_nombre->get_text() != "") and (p_txt_edad->get_text() != ""))
+	if((p_txt_nombre->get_text() != "") and (p_txt_edad->get_text() != ""))	// Ninguna de las entradas debe estar vacia.
 	{
-		user.setNombre(p_txt_nombre->get_text());
-		user.setEdad(stoi(p_txt_edad->get_text()));
+		user.setNombre(p_txt_nombre->get_text());	// Insertamos el nombre 
+		user.setEdad(stoi(p_txt_edad->get_text())); // setEdad coge un entero, por lo que tenemos que convertir el texto de la entrada en un int con stoi.
 
+		// Llamamos a el metodo toString() de user y lo insertamos en la etiqueta resultado, con esto nos evitamos convertir en string a cada valor.
 		p_lbl_resultado->set_text(user.toString());
 
-		p_txt_nombre->set_text("");
-		p_txt_edad->set_text("");
+		p_txt_nombre->set_text("");	// Limpiamos la entrada nombre.
+		p_txt_edad->set_text("");	// Limpiamos la entrada edad.
 	}
 }
 
 static void on_btn_salir_clicked()
 {
 	if(pVentana)
-		pVentana->hide();
+		pVentana->hide();	// Se encarga de cerrar la aplicación.
 }
 
 int main(int argc, char *argv[])
 {
-	auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");
-	auto ptrWidget = Gtk::Builder::create();
-
+	auto app = Gtk::Application::create(argc, argv, "org.gtkmm.example");	// inicializamos gtkmm
+	auto ptrWidget = Gtk::Builder::create();	// Definimos y creamos una instancia de un puntero a widget
+	
+	// Tratamos de ejecutar el archivo .glade que contiene nuestra GUI (que técnicamente se puede considerar como un archivo XML)
 	try
 	{
 		ptrWidget->add_from_file("ventana.glade");
@@ -64,12 +68,14 @@ int main(int argc, char *argv[])
  		return 1;
  	}
 
-	ptrWidget->get_widget("main_window", pVentana);
-	if(pVentana)
+	ptrWidget->get_widget("main_window", pVentana);		// Apuntamos nuestro puntero a la ventana del programa
+	if(pVentana)	//Si la función get_widget ha devuelto un puntero es porque ha encontrado la ventana dentro del archivo .glade (xml)
 	{
 		ptrWidget->get_widget("btn_resultado", p_btn_resultado);
 		if(p_btn_resultado)
 		{
+			// apuntamos los punteros hacia los elementos de la pantalla y enlazamos con sus manejadores, en este caso solo aplica con los botones
+			// ya que estamos utilizando sus manejadores o eventos "clicked", estamos haciendo que al presionar se llame a la función de arriba.
 			p_btn_resultado->signal_clicked().connect(sigc::ptr_fun(on_btn_resultado_clicked));
 		}
 
@@ -79,6 +85,8 @@ int main(int argc, char *argv[])
 			p_btn_salir->signal_clicked().connect(sigc::ptr_fun(on_btn_salir_clicked));
 		}
 
+		//Apuntamos los punteros de las entradas y las etiquetas hacia los elementos definidos en la GUI de glade, como no utilizamos ninguno de sus
+		// manejadores (eventos) no es necesario utilizar los if para apuntar a una función.
 		ptrWidget->get_widget("lbl_titulo", p_lbl_titulo);
 		ptrWidget->get_widget("lbl_descripcion", p_lbl_descripcion);
 		ptrWidget->get_widget("lbl_nombre", p_lbl_nombre);
@@ -87,7 +95,7 @@ int main(int argc, char *argv[])
 		ptrWidget->get_widget("txt_edad", p_txt_edad);
 		ptrWidget->get_widget("lbl_resultado", p_lbl_resultado);
 
-		app->run(*pVentana);
+		app->run(*pVentana);	// Lanzamos la aplicación.
 	}
 
 	delete pVentana;
