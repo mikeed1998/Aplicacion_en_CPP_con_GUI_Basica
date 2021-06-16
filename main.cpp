@@ -1,10 +1,10 @@
 ////////////////////////////////////////
 /*
-	FileName: main.c
-	FileType: C source file
+	FileName: main.cpp
+	FileType: C++ source file
 	Author: Sandoval Pérez, Michael Eduardo
-	Created on: 31/05/2021
-	Description: Creación de un arreglo que almacena matrices de cadenas de caracteres definidas con un struct
+	Created on: 16/06/2021
+	Description: Creación de una aplicación en C++ con GUI usando Glade.
 */
 ////////////////////////////////////////
 
